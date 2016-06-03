@@ -1,0 +1,69 @@
+Read me
+
+Christmas Day 2014
+
+Gconvert tilesets do NOT have a ',' at the end of the array.
+Tile Studio tilesets DO have a ',' at the end of the array.
+
+
+Have been able to convert Tile Studio .inc files, then broke it. Need to parse comma separated values instead of lines. 
+
+IDEAS!
+Another rewrite to make the parsing of .inc files more universal. 
+All (so far) .inc files have the "const char tilesheetname[] PROGMEM" line. This new program
+will read line by line until it finds the array definition. 
+It will then check if '{' is on the same line. If so it assumes the next data reads are part 
+of the array definition. If not it will read up until it finds the '{' and stop when it finds '}'.
+It will read char by char and look for comments. 
+It will check for '/' and then make a decision upon the next character.
+If it is another '/' then the rest of the line is ignored until the next 0x0A.
+If it is '*' then data reads will not be saved until it reachs a '/' followed by a '*'.
+No 0x0A are to be stored. The resulting array should be one line with just the binary values.
+
+Find the correct array, store as text all data between the '{' and '}'. Obey and skip all 
+comments and 0x0A line breaks. 
+Now we have a text array with just the text values. There should only be the text values. There 
+should NOT be any line comments or line breaks or anything else other than the text between 
+the '{' and the '}'.
+Then use strtol on the whole line.
+
+functions: 
+    calcArraySize - Finds the array string declaration. Counts the number of chars between '{' and '}'. 
+                    Will likely be a higher number than what is needed.
+                    Returns nothing. It modifies two variables passed to it by reference. 
+                    First is the count, second is the file position
+                    where the array string declaration was found.
+                    
+    Use malloc to create new array. This will be used to store the text between '{' and '}'.
+    
+    copyText2Array -    Uses the count and file position. Reads the chars between '{' and '}' into the 
+                        malloc'd array which is also passed by reference.
+                        This array is just text.
+                        Remove all 0x0A line breaks and obey line comments. Do not store line comments. 
+                        Only the important text values should be in this array.
+                        Count the 'x' or 'X' chars. This will serve as the final size of the next array.
+    
+    Use malloc to create new array. This will be used to store the binary data
+    
+    convertTextArray2binary - Take the text array and use strtol to obtain binary values. 
+    
+    decodeinc - Is passed the converted text array and creates a .bmp file.
+    
+WORKING GREAT FOR MODE1 AND MODE3.
+The Dr. Mario title screen gives malloc errors. The pills and fonts .inc files worked though.
+malloc errors resolved enough to work. I was using sizeof on argv[2] which isn't known at compile time. 
+
+BUGS:
+malloc configuration is probably wrong but it does work.
+decodeinc function has problems with image boundries. If you access an out-of-bounds 
+pixel then you get an error on the console for each bad access. This can freeze up the 
+console. SOLUTION: Do the bounds check BEFORE EasyBMP does it's check. Handle it yourself. 
+
+decodeinc out of bounds check complete. The pixels really would have been out of bounds.
+This happens because there are more tiles than room for them in the bmp. 
+The bmp dimensions need to be dynamic to handle this. 
+
+Using bmp2png example from LodePNG to convert the new .bmp to .png. Filesizes are way smaller. 
+
+
+

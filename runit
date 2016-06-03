@@ -1,0 +1,48 @@
+#!/bin/bash
+# clear
+echo "Removing old version"
+rm c_inc2img -f
+rm c_inc2img.exe -f
+
+echo "Compiling program"
+# i686-w64-mingw32-g++ c_inc2img.c -o c_inc2img.exe EasyBMP/EasyBMP.cpp -DUTC="-5" -static -static-libgcc -static-libstdc++
+g++ -o c_inc2img c_inc2img.cpp EasyBMP/EasyBMP.cpp LodePNG/lodepng.cpp -DUTC="-5"
+
+# Did it compile?
+if [ $? -eq 0 ]
+then
+	# Remove previous output files.
+	rm output/*.bmp
+	rm output/*.png
+	rm ../../c_inc2img_OUT/*.bmp
+	rm ../../c_inc2img_OUT/*.png
+	# Run the Linux version.
+	./c_inc2img input/dm_fonts.pic.inc fonts 1
+	./c_inc2img input/dm_drmario_sprites pills 1
+	./c_inc2img input/dm_drmario_title.inc drmario_title 1
+	./c_inc2img input/sokoban_tiles.inc sokoban_tiles 10
+	# ./c_inc2img input/sprites.inc sprites1 3
+	# ./c_inc2img input/sprites.pic.inc arkanoidSprites_tileset 3
+	# ./c_inc2img input/flappybird.inc alltiles 3
+	# ./c_inc2img input/fonts_8x8.pic.inc font_tileset 3
+	# ./c_inc2img input/uzesweeper_graphicsinc.inc GameSprites 3
+	# ./c_inc2img input/uzesweeper_titleinc.inc TitleTiles 3
+	# ./c_inc2img input/chess4uzebox_mode5.inc game 5
+	# ./c_inc2img input/chess4uzebox_mode5.inc thinking 5
+	# ./c_inc2img input/chess4uzebox_mode5.inc menu 5
+	# ./c_inc2img input/tiles.inc cTesterTiles 3
+
+	# Remove the .bmp files as we only really need the .png.
+	rm output/*.bmp
+	# Copy the .png files to the web output folder.
+	# cp output/*.png ../../c_inc2img_OUT
+
+	# Dropbox sync
+	# ./dropbox_uploader.sh -p upload * "/Projects/Project_Uzebox/uzebox_bin_Win32_dev_trunk_r212/MY_GAMES/c_inc2img"
+	# ./dropbox_uploader.sh -p upload c_inc2img* "/Projects/Project_Uzebox/uzebox_bin_Win32_dev_trunk_r212/MY_GAMES/c_inc2img"
+else
+	echo "Compile failed. Check for error messages from g++."
+fi
+
+
+
