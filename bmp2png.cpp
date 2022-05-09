@@ -124,5 +124,7 @@ int convertbmp2png(char *sourcefile, char * destinationfile)
   }
   
   lodepng::save_file(png, destinationfile);
-  
+
+  // FIX: this function needs to return something.
+  return 1;
 }

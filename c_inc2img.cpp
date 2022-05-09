@@ -256,7 +256,7 @@ unsigned int copyText2Array(FILE * fptr, char * arraySearchString, unsigned int 
 	return ainx ;
 }
 
-int decodeinc(unsigned char  alltiles[], long int ALLTILES_SIZE, char * spritesheetname, unsigned int tilewidthx, unsigned int tileheighty){
+void decodeinc(unsigned char  alltiles[], long int ALLTILES_SIZE, char * spritesheetname, unsigned int tilewidthx, unsigned int tileheighty){
 	printf("\n**** decodeinc ****\nProcessing %li bytes for the tilesheet: %s\n", ALLTILES_SIZE, spritesheetname);
 	// Variable init.
 	unsigned int tilestartX = 0;	// Beginning X value for the current tile.

@@ -36,7 +36,7 @@ unsigned int copyText2Array(
 );
 
 // Accepts the converted .inc file array. Uses that data to create a .bmp file. 
-int decodeinc(
+void decodeinc(
 	unsigned char alltiles[], 	// 
 	long int ALLTILES_SIZE, 	// 
 	char * spritesheetname,		// 
