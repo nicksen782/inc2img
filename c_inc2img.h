@@ -14,7 +14,7 @@ using namespace std;
 
 // Defines
 #define VERSION_MAJ 1
-#define VERSION_MIN 0
+#define VERSION_MIN 1
 #define VERSION_BUILDTIME __DATE__ " _ " __TIME__
 #define EST (-5)
 

@@ -233,26 +233,23 @@ unsigned int copyText2Array(FILE * fptr, char * arraySearchString, unsigned int 
 		}
 	}
 
-	// By counting the number of commas you can determine how many descrete values are in the array.
-	// ... in the past I used to look for 'x' or 'X'. That would only work for hex values. Tile Studio or
-	// ... others may use decimal numbers (no x) but a comma would still be there for each value. This
-	// ... way is better.
-	unsigned int x = 0 ;
-	for(x=0; x<ainx; x++){
-		if(pre_c_array[x] == ',') {
-			*numvaluesinarray = *numvaluesinarray + 1;
-		}
-	}
-
 	// We have the array. Now remove the ',' and '}'.
-	for(i=0; i<textArraySize; i++){
+	for(i=0; i<ainx; i++){
 		if(pre_c_array[i] == ',' || pre_c_array[i] == '}'){
 			pre_c_array[i] = ' ';
 		}
-	} i=0;
+	}
 
-	// Edit the variable even though it was created before this function was invoked. Yay pointers and dereferencing!
-	*numvaluesinarray = *numvaluesinarray;
+	// Count transitions from space to non-space to determine array length.
+	*numvaluesinarray = 0;
+	char prev_char = ' ';
+	for(i=0; i<ainx; i++){
+		if(prev_char == ' ' && pre_c_array[i] != ' '){
+			(*numvaluesinarray)++;
+		}
+		prev_char = pre_c_array[i];
+	}
+
 	return ainx ;
 }
 
